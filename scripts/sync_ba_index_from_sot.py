@@ -51,19 +51,22 @@ def map_access(proc: str) -> str:
     return proc.strip()
 
 
+def _cell_hyperlink(cell) -> str:
+    return cell.hyperlink.target if cell.hyperlink else ""
+
+
 def load_rows(xlsx: Path) -> list[tuple[str, str, str, str]]:
     wb = load_workbook(xlsx, data_only=True)
     ws = wb[SHEET]
     rows: list[tuple[str, str, str, str]] = []
     seen: set[tuple[str, str]] = set()
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        state = str(row[0]).strip() if row[0] else None
+    for row in ws.iter_rows(min_row=2):
+        state = str(row[0].value).strip() if row[0].value else None
         if not state or state in ("None", "#N/A") or state.startswith("#"):
             continue
-        board = " ".join(str(row[2]).split()) if row[2] else ""
-        proc = str(row[3]).strip() if row[3] else ""
-        scrapable = str(row[4]).strip() if row[4] else ""
-        url = str(row[12]).strip() if row[12] else ""
+        board = " ".join(str(row[2].value).split()) if row[2].value else ""
+        proc = str(row[3].value).strip() if row[3].value else ""
+        scrapable = str(row[4].value).strip() if row[4].value else ""
 
         if proc.lower().startswith("not available") or scrapable == "Not Scrapable":
             continue
@@ -73,8 +76,13 @@ def load_rows(xlsx: Path) -> list[tuple[str, str, str, str]]:
             continue
         seen.add(key)
 
+        # Col M (index 12) holds the download/scraper URL; col K (index 10) holds the lookup URL.
+        # Prefer col M; fall back to col K hyperlink for lookup-type boards.
+        url = str(row[12].value).strip() if row[12].value else ""
         if url in ("-", "None", ""):
-            url = ""
+            url = _cell_hyperlink(row[12])
+        if not url:
+            url = _cell_hyperlink(row[10])
 
         access = map_access(proc)
         rows.append((state, board, url, access))
