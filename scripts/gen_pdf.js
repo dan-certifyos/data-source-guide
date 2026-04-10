@@ -14,7 +14,7 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const HTML_GLOB = fs
   .readdirSync(ROOT)
-  .filter((f) => f.match(/^certifyos-primary-source-reference-.*\.html$/))
+  .filter((f) => f.match(/^certifyos-primary-source-reference.*\.html$/))
   .sort()
   .pop();
 

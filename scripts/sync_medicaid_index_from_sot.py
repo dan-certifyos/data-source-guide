@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Regenerate the State Medicaid Exclusion Source Index tbody in certifyos-primary-source-reference-*.html
+Regenerate the State Medicaid Exclusion Source Index tbody in certifyos-primary-source-reference.html
 from the State Level Exclusions List.xlsx source-of-truth (column B = label, column C = hyperlink).
 
 Usage (from repo root):
@@ -27,7 +27,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_XLSX = ROOT / "temp-sot-downloads" / "State Level Exclusions List.xlsx"
-HTML_GLOB = "certifyos-primary-source-reference-*.html"
+HTML_GLOB = "certifyos-primary-source-reference*.html"
 OIG_LEIE = "https://oig.hhs.gov/exclusions/exclusions_list.asp"
 TERRITORIES = frozenset({"VI", "MP", "AS", "GU", "PR"})
 
