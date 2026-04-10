@@ -1,0 +1,6 @@
+.DS_Store
+.generated-medicaid-tbody.txt
+temp-sot-downloads/
+__pycache__/
+*.pyc
+.venv/
