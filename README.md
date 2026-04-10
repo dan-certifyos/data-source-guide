@@ -57,8 +57,8 @@ gsutil setmeta \
 ```
 
 **Public URLs** (requires `@certifyos.com` login):
-- HTML: `https://storage.googleapis.com/certifyos-monitoring-reports/internal/certifyos-primary-source-reference.html`
-- PDF: `https://storage.googleapis.com/certifyos-monitoring-reports/internal/certifyos-primary-source-reference.pdf`
+- HTML: `https://storage.cloud.google.com/certifyos-monitoring-reports/internal/certifyos-primary-source-reference.html`
+- PDF: `https://storage.cloud.google.com/certifyos-monitoring-reports/internal/certifyos-primary-source-reference.pdf`
 
 > Dated archive copies (e.g. `certifyos-primary-source-reference-2026-04-06.*`) are preserved in GCS as version snapshots. Old links continue to serve the version that was current at the time of that publish.
 
