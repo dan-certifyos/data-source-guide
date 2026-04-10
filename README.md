@@ -84,6 +84,11 @@ python3 scripts/sync_medicaid_index_from_sot.py
 
 The script classifies each U.S. state and DC: rows whose LINK column points at the generic HHS OIG LEIE download appear in the footnote; all others get a row in the alphabetical index with label and URL from the sheet. After running, follow the Edit → PDF → Publish steps above.
 
+## Rules
+
+1. **No internal links in the HTML or PDF.** This is a client-facing document. Do not link to internal Google Sheets, Confluence pages, Jira tickets, or any other internal tooling. Reference data sources by name only.
+2. **Every HTML edit must be followed by PDF regen and GCS publish.** Run `bash scripts/publish.sh` after any change to the HTML. Never commit or share an HTML update without also updating the PDF and GCS.
+
 ## License
 
 Internal reference material; confirm with CertifyOS before redistributing.
