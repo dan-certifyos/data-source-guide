@@ -8,6 +8,7 @@ Published **CertifyOS primary source reference** (HTML/PDF) and pointers to **da
 - `certifyos-primary-source-reference.html` — client-facing reference guide; regenerate PDF from HTML when updated.
 - `certifyos-primary-source-reference.pdf` — client-facing PDF; regenerate from HTML after any edits.
 - `scripts/sync_ba_index_from_sot.py` — rebuilds the **Board Licensure Action Source Index** directly from `temp-sot-downloads/Board Action Research - SOT.xlsx` and patches the HTML in place (no manual paste needed).
+- `scripts/sync_cds_index_from_sot.py` — rebuilds the **CDS State Source Index** from `temp-sot-downloads/CDS Research.xlsx` and patches the HTML in place (no manual paste needed).
 - `scripts/gen_ba_index.py` — legacy: same source, but writes a fragment to `temp-sot-downloads/board_rows.html` for manual inspection.
 - `scripts/sync_medicaid_index_from_sot.py` — rebuilds the **State Medicaid Exclusion Source Index** from `temp-sot-downloads/State Level Exclusions List.xlsx`.
 - `scripts/gen_pdf.js` — generates the PDF from the HTML using Chrome DevTools Protocol (no headers/footers).
@@ -74,6 +75,16 @@ python3 scripts/sync_ba_index_from_sot.py
 ```
 
 The script reads the board action research spreadsheet, filters out boards with no accessible disciplinary action data, deduplicates, sorts by state then board name, and patches the HTML directly — no manual paste needed. After running, follow the Edit → PDF → Publish steps above.
+
+### CDS State Source Index
+
+Export the [CDS Research](https://docs.google.com/spreadsheets/d/...) sheet to `temp-sot-downloads/CDS Research.xlsx`, then:
+
+```bash
+python3 scripts/sync_cds_index_from_sot.py
+```
+
+The script reads three sheets (NurseOS, DentOS, MedOS), filters to rows where DataOps is actively collecting, deduplicates by `(state, board)` pair, and patches the HTML directly — no manual paste needed. Five states with no xlsx rows (AL, DC, MI, NJ, OK) are preserved as no-URL fallback entries. After running, follow the Edit → PDF → Publish steps above.
 
 ### State Medicaid Exclusion index
 
