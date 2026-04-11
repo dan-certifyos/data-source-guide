@@ -95,9 +95,7 @@ Export the [Credbase Provider Data Sources](https://docs.google.com/spreadsheets
 python3 scripts/sync_state_license_index_from_sot.py
 ```
 
-The script reads the "Source Log- SOT" sheet, groups rows by (state, board), collects credential short codes per board, resolves license verification URLs from column 6 hyperlinks (falling back to URLs already in the HTML for boards whose names match), sorts by state then board name, and patches the HTML directly — no manual paste needed. After running, follow the Edit → PDF → Publish steps above.
-
-> **Note on URLs:** The xlsx export may not preserve formula-computed hyperlinks from Google Sheets. When that happens, the script falls back to URLs already present in the HTML for matching board names. Boards that are new to the SOT or renamed will appear without URLs until the SOT export is refreshed with direct hyperlinks or updated manually.
+The script reads the 6 per-OS detail sheets (MedOS, MentOS, DentOS, NurseOS, PT, ABA), groups rows by (state, board), collects credential short codes per board, resolves license verification URLs from cell hyperlinks, sorts by state then board name, and patches the HTML directly — no manual paste needed. After running, follow the Edit → PDF → Publish steps above.
 
 ### State Medicaid Exclusion index
 

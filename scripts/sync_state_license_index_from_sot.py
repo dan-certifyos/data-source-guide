@@ -11,16 +11,10 @@ Requires: openpyxl
 
 Default xlsx path: temp-sot-downloads/Credbase Provider Data Sources.xlsx
 
-Columns used (0-indexed) from sheet "Source Log- SOT":
-  col 3: state code (2-letter, e.g. "AL")
-  col 4: credential code(s) — already short codes, may be newline-separated (e.g. "DDS\nDMD")
-  col 6: license verification link (hyperlink via cell.hyperlink.target)
-  col 8: board name
-
-URLs: col 6 carries the license verification link as a hyperlink. When the xlsx export does
-not preserve formula-computed hyperlinks (which is common for Google Sheets exports), the
-script falls back to matching board names against URLs already in the HTML, preserving
-existing links for known boards.
+Reads the 6 per-OS detail sheets (MedOS, MentOS, DentOS, NurseOS, PT, ABA) which each
+have the license verification URL as a real hyperlink in their "License Verification Link"
+column. The summary "Source Log- SOT" sheet is NOT used because its col 6 XLOOKUP formulas
+lose their hyperlinks when exported from Google Sheets to xlsx.
 
 After running, follow the Edit → PDF → Publish steps in README.md (run publish.sh).
 """
@@ -42,9 +36,18 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_XLSX = ROOT / "temp-sot-downloads" / "Credbase Provider Data Sources.xlsx"
 HTML_GLOB = "certifyos-primary-source-reference*.html"
-SHEET = "Source Log- SOT"
 
-# Canonical ordering for display in idx-sub
+# Per-sheet config: (sheet_name, state_code_col, provider_code_col, board_name_col, url_col)
+# NurseOS has a different layout from the other 5 sheets.
+SHEET_CONFIGS = [
+    ("MedOS ",  1, 3, 15, 13),
+    ("MentOS",  1, 3, 15, 13),
+    ("DentOS",  1, 3, 15, 13),
+    ("NurseOS", 1, 3, 20, 18),
+    ("PT ",     1, 3, 15, 13),
+    ("ABA",     1, 3, 15, 13),
+]
+
 CREDENTIAL_ORDER = [
     "MD", "DO", "PA",
     "RN", "APRN", "LPN",
@@ -59,85 +62,46 @@ def _cell_hyperlink(cell) -> str:
     return cell.hyperlink.target if cell.hyperlink else ""
 
 
-def _extract_html_board_urls(html_path: Path) -> dict[tuple[str, str], str]:
-    """Parse the existing HTML to build a (state, board_name) → url lookup.
-
-    Preserves URLs for boards that are already in the HTML, so they survive a
-    round-trip even when the xlsx export does not carry formula-computed hyperlinks.
-    """
-    text = html_path.read_text(encoding="utf-8")
-    pattern = (
-        r'<span class="idx-state">([A-Z]{2})</span></td>'
-        r'<td><span class="idx-source">'
-        r'(?:<a href="([^"]+)"[^>]*>)?([^<]+)'
-    )
-    lookup: dict[tuple[str, str], str] = {}
-    for m in re.finditer(pattern, text):
-        state = m.group(1)
-        url = m.group(2) or ""
-        board = html_module.unescape(m.group(3).strip())
-        if state and board:
-            lookup[(state, board)] = url
-    return lookup
-
-
 def _sort_credentials(creds: list[str]) -> list[str]:
     known = [c for c in CREDENTIAL_ORDER if c in creds]
     unknown = sorted(c for c in creds if c not in CREDENTIAL_ORDER)
     return known + unknown
 
 
-def load_rows(
-    xlsx: Path,
-    url_fallback: dict[tuple[str, str], str],
-) -> list[tuple[str, str, str, str]]:
+def load_rows(xlsx: Path) -> list[tuple[str, str, str, str]]:
     """Return sorted list of (state_code, board_name, url, credential_codes_str).
 
-    Groups by (state_code, board_name), collecting all credential short codes.
-    Reads hyperlinks from col 6; falls back to url_fallback for boards already
-    known from HTML when the xlsx export does not include formula-resolved links.
+    Reads all 6 per-OS detail sheets, groups by (state_code, board_name),
+    collects credential codes, and resolves URLs from cell hyperlinks.
     """
     wb = load_workbook(xlsx, data_only=True)
-    ws = wb[SHEET]
-
     groups: dict[tuple[str, str], dict] = defaultdict(lambda: {"credentials": set(), "url": ""})
 
-    for row in ws.iter_rows(min_row=2):
-        state_cell = row[3]
-        cred_cell = row[4]
-        url_cell = row[6]
-        board_cell = row[8]
+    for sheet_name, state_col, cred_col, board_col, url_col in SHEET_CONFIGS:
+        ws = wb[sheet_name]
+        for row in ws.iter_rows(min_row=2):
+            state = str(row[state_col].value).strip() if row[state_col].value else None
+            if not state or not re.fullmatch(r"[A-Z]{2}", state):
+                continue
 
-        state = str(state_cell.value).strip() if state_cell.value else None
-        if not state or not re.fullmatch(r"[A-Z]{2}", state):
-            continue
+            board = " ".join(str(row[board_col].value).split()) if row[board_col].value else ""
+            if not board:
+                continue
 
-        board = " ".join(str(board_cell.value).split()) if board_cell.value else ""
-        if not board:
-            continue
+            raw_creds = str(row[cred_col].value).strip() if row[cred_col].value else ""
+            for code in raw_creds.splitlines():
+                code = code.strip()
+                if code:
+                    groups[(state, board)]["credentials"].add(code)
 
-        # col 4 already contains short codes (e.g. "MD", "DDS\nDMD", "RN\nAPRN\nLPN")
-        raw_creds = str(cred_cell.value).strip() if cred_cell.value else ""
-        for code in raw_creds.splitlines():
-            code = code.strip()
-            if code:
-                groups[(state, board)]["credentials"].add(code)
-
-        # Try hyperlink first, then raw URL value from col 6
-        url = _cell_hyperlink(url_cell)
-        if not url:
-            raw = str(url_cell.value).strip() if url_cell.value else ""
-            if raw not in ("", "None", "-", "Link"):
-                url = raw
-
-        if url and not groups[(state, board)]["url"]:
-            groups[(state, board)]["url"] = url
+            url = _cell_hyperlink(row[url_col])
+            if url and not groups[(state, board)]["url"]:
+                groups[(state, board)]["url"] = url
 
     rows: list[tuple[str, str, str, str]] = []
     for (state, board), entry in groups.items():
-        url = entry["url"] or url_fallback.get((state, board), "")
         creds_str = ", ".join(_sort_credentials(list(entry["credentials"])))
-        rows.append((state, board, url, creds_str))
+        rows.append((state, board, entry["url"], creds_str))
 
     rows.sort(key=lambda r: (r[0], r[1]))
     return rows
@@ -219,10 +183,7 @@ def main() -> None:
         print(f"No {HTML_GLOB} in {ROOT}", file=sys.stderr)
         sys.exit(1)
 
-    # Build URL fallback from the first matching HTML file before patching
-    url_fallback = _extract_html_board_urls(html_files[0])
-
-    rows = load_rows(xlsx, url_fallback)
+    rows = load_rows(xlsx)
     tbody = build_tbody_rows(rows)
 
     url_count = sum(1 for _, _, url, _ in rows if url)
@@ -235,11 +196,6 @@ def main() -> None:
             f"{(len(rows) + 1) // 2} table rows, "
             f"{url_count} with URLs, {no_url_count} without)."
         )
-
-    print("\nFirst 5 rows generated:")
-    for state, board, url, creds in rows[:5]:
-        url_display = url[:60] if url else "(none)"
-        print(f"  [{state}] {board[:60]} | url={url_display} | creds={creds}")
 
 
 if __name__ == "__main__":
