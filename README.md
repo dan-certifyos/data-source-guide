@@ -10,7 +10,6 @@ Published **CertifyOS primary source reference** (HTML/PDF) and pointers to **da
 - `scripts/sync_state_license_index_from_sot.py` — rebuilds the **State Licensing Authority Index** from `temp-sot-downloads/Credbase Provider Data Sources.xlsx` and patches the HTML in place (no manual paste needed).
 - `scripts/sync_ba_index_from_sot.py` — rebuilds the **Board Licensure Action Source Index** directly from `temp-sot-downloads/Board Action Research - SOT.xlsx` and patches the HTML in place (no manual paste needed).
 - `scripts/sync_cds_index_from_sot.py` — rebuilds the **CDS State Source Index** from `temp-sot-downloads/CDS Research.xlsx` and patches the HTML in place (no manual paste needed).
-- `scripts/gen_ba_index.py` — legacy: same source, but writes a fragment to `temp-sot-downloads/board_rows.html` for manual inspection.
 - `scripts/sync_medicaid_index_from_sot.py` — rebuilds the **State Medicaid Exclusion Source Index** from `temp-sot-downloads/State Level Exclusions List.xlsx`.
 - `scripts/gen_pdf.js` — generates the PDF from the HTML using Chrome DevTools Protocol (no headers/footers).
 
