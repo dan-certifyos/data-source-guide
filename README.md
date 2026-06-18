@@ -122,6 +122,7 @@ The published reference guide carries a version label in its header (e.g. `Certi
 
 - **v1** — Initial published Primary Source Reference Guide (full source index across Provider Identity, Licensure, Board Certification, Sanctions & Exclusions, and Medicare Participation Status).
 - **v2 (2026-06-16)** — CDS updates: removed the DEA-registrant-file CDS row (state-source CDS row retained); removed internal Google Sheet links from the State Medicaid Exclusions row and unwrapped a `google.com/url` redirect in the State Licensing index; added external CDS source links in the CDS State Source Index (DC, MI, NJ, OK, RI); added the second-license jurisdiction list with the DOJ source link to the CDS source overview row.
+  - **2026-06-18 (PR #17)** — Navigation & layout revision (label unchanged at v2): legend category chips now link down to their overview sections, and "see index" references link to the matching index tables (styled as pill jump-links with a down-arrow); all index tables moved below the overview tables; the legend/category bar is frozen (sticky) on scroll, with anchor scroll offsets so jumped-to headings clear the bar.
 
 ## License
 
