@@ -12,6 +12,7 @@ Published **CertifyOS primary source reference** (HTML/PDF) and pointers to **da
 - `scripts/sync_cds_index_from_sot.py` — rebuilds the **CDS State Source Index** from `temp-sot-downloads/CDS Research.xlsx` and patches the HTML in place (no manual paste needed).
 - `scripts/sync_medicaid_index_from_sot.py` — rebuilds the **State Medicaid Exclusion Source Index** from `temp-sot-downloads/State Level Exclusions List.xlsx`.
 - `scripts/gen_pdf.js` — generates the PDF from the HTML using Chrome DevTools Protocol (no headers/footers).
+- `.cursor/skills/publish-data-source-guide/` — Cursor skill for the Edit → PDF → Publish workflow (regenerate PDF, publish HTML + PDF to GCS).
 
 ## Prerequisites
 
@@ -66,42 +67,46 @@ gsutil setmeta \
 
 ## Rebuild index sections from SOT
 
+> **Sync scripts are disabled by default.** All index sections are now maintained directly in the HTML. The `scripts/sync_*_from_sot.py` scripts refuse to run (exit code 2, no changes) unless you pass `--force` or set `SOT_SYNC_FORCE=1`, because re-syncing from the xlsx can overwrite curated edits. Only force a sync after confirming the relevant xlsx SOT actually reflects the current curated index.
+
 ### Board Licensure Action index
 
-Export the Board Action Research sheet to `temp-sot-downloads/Board Action Research - SOT.xlsx`, then:
+Export the Board Action Research sheet to `temp-sot-downloads/Board Action Research - SOT.xlsx`, then (only if you intend to rebuild from the xlsx):
 
 ```bash
-python3 scripts/sync_ba_index_from_sot.py
+python3 scripts/sync_ba_index_from_sot.py --force
 ```
 
-The script reads the board action research spreadsheet, filters out boards with no accessible disciplinary action data, deduplicates, sorts by state then board name, and patches the HTML directly — no manual paste needed. After running, follow the Edit → PDF → Publish steps above.
+The script reads the board action research spreadsheet, filters out boards with no accessible disciplinary action data, deduplicates, sorts by state then board name, and patches the HTML directly. After running, follow the Edit → PDF → Publish steps above.
 
 ### CDS State Source Index
 
-Export the [CDS Research](https://docs.google.com/spreadsheets/d/...) sheet to `temp-sot-downloads/CDS Research.xlsx`, then:
+> **Manually curated — do not blindly re-sync.** The CDS State Source Index is hand-maintained to match the 25 DOJ second-license jurisdictions (`pract-state-lic-require.html`), with per-state source links that are **not** all present in `CDS Research.xlsx`. Re-running the sync script would overwrite that work, so it is **guarded**: it exits without changes unless you pass `--force` (or set `SOT_SYNC_FORCE=1`). Prefer editing the HTML directly; only force the sync after confirming the xlsx SOT actually reflects the curated 25-state list.
+
+Export the [CDS Research](https://docs.google.com/spreadsheets/d/...) sheet to `temp-sot-downloads/CDS Research.xlsx`, then (only if you intend to rebuild from the xlsx):
 
 ```bash
-python3 scripts/sync_cds_index_from_sot.py
+python3 scripts/sync_cds_index_from_sot.py --force
 ```
 
-The script reads three sheets (NurseOS, DentOS, MedOS), filters to rows where DataOps is actively collecting, deduplicates by `(state, board)` pair, and patches the HTML directly — no manual paste needed. Five states with no xlsx rows (AL, DC, MI, NJ, OK) are preserved as no-URL fallback entries. After running, follow the Edit → PDF → Publish steps above.
+The script reads three sheets (NurseOS, DentOS, MedOS), filters to rows where DataOps is actively collecting, deduplicates by `(state, board)` pair, and patches the HTML directly. Five states with no xlsx rows (AL, DC, MI, NJ, OK) are preserved as no-URL fallback entries. After running, follow the Edit → PDF → Publish steps above.
 
 ### State Licensing Authority index
 
-Export the [Credbase Provider Data Sources](https://docs.google.com/spreadsheets/d/1Fs87fkrnFdnEtPsEVrrjpt1bQrAWFL7xF8KcUQs4izA/edit) sheet to `temp-sot-downloads/Credbase Provider Data Sources.xlsx`, then:
+Export the [Credbase Provider Data Sources](https://docs.google.com/spreadsheets/d/1Fs87fkrnFdnEtPsEVrrjpt1bQrAWFL7xF8KcUQs4izA/edit) sheet to `temp-sot-downloads/Credbase Provider Data Sources.xlsx`, then (only if you intend to rebuild from the xlsx):
 
 ```bash
-python3 scripts/sync_state_license_index_from_sot.py
+python3 scripts/sync_state_license_index_from_sot.py --force
 ```
 
 The script reads the 6 per-OS detail sheets (MedOS, MentOS, DentOS, NurseOS, PT, ABA), groups rows by (state, board), collects credential short codes per board, resolves license verification URLs from cell hyperlinks, sorts by state then board name, and patches the HTML directly — no manual paste needed. After running, follow the Edit → PDF → Publish steps above.
 
 ### State Medicaid Exclusion index
 
-Export the [State Medicaid Exclusions & Sanctions](https://docs.google.com/spreadsheets/d/13F4QNq_a9-Rg8-Q-3ACHYftzUE0LgJbESjTGFJqBZ-k/edit) sheet to `temp-sot-downloads/State Level Exclusions List.xlsx`, then:
+Export the [State Medicaid Exclusions & Sanctions](https://docs.google.com/spreadsheets/d/13F4QNq_a9-Rg8-Q-3ACHYftzUE0LgJbESjTGFJqBZ-k/edit) sheet to `temp-sot-downloads/State Level Exclusions List.xlsx`, then (only if you intend to rebuild from the xlsx):
 
 ```bash
-python3 scripts/sync_medicaid_index_from_sot.py
+python3 scripts/sync_medicaid_index_from_sot.py --force
 ```
 
 The script classifies each U.S. state and DC: rows whose LINK column points at the generic HHS OIG LEIE download appear in the footnote; all others get a row in the alphabetical index with label and URL from the sheet. After running, follow the Edit → PDF → Publish steps above.

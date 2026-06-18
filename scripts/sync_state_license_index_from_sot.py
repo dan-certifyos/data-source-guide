@@ -22,6 +22,7 @@ After running, follow the Edit → PDF → Publish steps in README.md (run publi
 from __future__ import annotations
 
 import html as html_module
+import os
 import re
 import sys
 from collections import defaultdict
@@ -169,7 +170,21 @@ def patch_html(html_path: Path, tbody_inner: str, board_count: int) -> None:
     html_path.write_text(text, encoding="utf-8")
 
 
+GUARD_MESSAGE = (
+    "REFUSING TO RUN: SOT index sync scripts are disabled by default. The State "
+    "Licensing Authority Index in the HTML is maintained directly, and re-syncing "
+    "from the xlsx can overwrite curated edits.\n\n"
+    "If you really intend to rebuild from the xlsx, re-run with --force or set "
+    "SOT_SYNC_FORCE=1.\n"
+)
+
+
 def main() -> None:
+    forced = "--force" in sys.argv[1:] or os.environ.get("SOT_SYNC_FORCE") == "1"
+    if not forced:
+        print(GUARD_MESSAGE, file=sys.stderr)
+        sys.exit(2)
+
     xlsx = DEFAULT_XLSX
     if not xlsx.is_file():
         print(
