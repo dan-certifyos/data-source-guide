@@ -28,10 +28,11 @@
   .meta-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(201,191,233,0.1); border:1px solid rgba(201,191,233,0.2); border-radius:100px; padding:5px 12px; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.2px; color:var(--lavender); }
   .meta-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--yellow); }
 
-  .legend-bar { background:var(--white); border-bottom:1px solid var(--border); padding:14px 64px; display:flex; align-items:center; gap:32px; flex-wrap:wrap; }
+  .legend-bar { background:var(--white); border-bottom:1px solid var(--border); padding:14px 64px; display:flex; align-items:center; gap:32px; flex-wrap:wrap; position:sticky; top:0; z-index:50; box-shadow:0 1px 3px rgba(4,6,16,0.05); }
   .legend-label { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.2px; color:var(--text-muted); margin-right:4px; }
   .legend-items { display:flex; gap:20px; flex-wrap:wrap; align-items:center; }
-  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; color:var(--charcoal); }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; color:var(--charcoal); text-decoration:none; cursor:pointer; }
+  a.legend-item:hover { color:var(--purple); }
   .legend-swatch { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
   .swatch-identity { background:var(--purple); } .swatch-licensure { background:var(--green); }
   .swatch-training { background:var(--orange); } .swatch-sanctions { background:var(--red); }
@@ -39,7 +40,7 @@
 
   .content { max-width:1200px; margin:0 auto; padding:48px 64px; }
 
-  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; margin-top:48px; }
+  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; margin-top:48px; scroll-margin-top:72px; }
   .section-header:first-child { margin-top:0; }
   .section-stripe { width:4px; height:24px; border-radius:2px; flex-shrink:0; }
   .stripe-identity { background:var(--purple); } .stripe-licensure { background:var(--green); }
@@ -67,6 +68,10 @@
   .td-authority { font-size:12px; color:var(--text-muted); }
   .td-url { font-family:'Fira Code',monospace; font-size:11px; color:var(--purple); overflow-wrap:break-word; word-break:normal; }
   .td-url a { color:var(--purple); text-decoration:none; } .td-url a:hover { text-decoration:underline; }
+  .idx-link { color:var(--purple); text-decoration:underline; text-underline-offset:2px; font-weight:600; }
+  .jump-link { display:inline-flex; align-items:center; gap:3px; padding:1px 8px; border-radius:100px; background:var(--lavender-tint); color:var(--purple); font-weight:600; text-decoration:none; white-space:nowrap; }
+  .jump-link::after { content:"\2193"; font-size:0.9em; line-height:1; }
+  .jump-link:hover { background:var(--lavender); }
   .td-access { font-size:12px; color:var(--charcoal); }
   .td-freq { font-size:12px; }
   .col-indicator { width:4px !important; padding:0 !important; }
@@ -116,7 +121,7 @@
     .header-sub { font-size: 11px; }
     .header-meta { margin-top: 12px; gap: 12px; }
     .meta-badge { font-size: 9px; padding: 3px 8px; }
-    .legend-bar { padding: 8px 28px; gap: 16px; }
+    .legend-bar { padding: 8px 28px; gap: 16px; position: static; box-shadow: none; }
     .legend-item { font-size: 10px; }
     .content { padding: 16px 28px; max-width: 100%; }
     .callout { padding: 10px 14px; margin-bottom: 20px; font-size: 11px; }
@@ -190,11 +195,11 @@
 <div class="legend-bar">
   <span class="legend-label">Category</span>
   <div class="legend-items">
-    <span class="legend-item"><span class="legend-swatch swatch-identity"></span>Provider Identity</span>
-    <span class="legend-item"><span class="legend-swatch swatch-licensure"></span>Licensure</span>
-    <span class="legend-item"><span class="legend-swatch swatch-training"></span>Board Certification</span>
-    <span class="legend-item"><span class="legend-swatch swatch-sanctions"></span>Sanctions &amp; Exclusions</span>
-    <span class="legend-item"><span class="legend-swatch swatch-attestation"></span>Provider Attestation</span>
+    <a class="legend-item" href="#sec-identity"><span class="legend-swatch swatch-identity"></span>Provider Identity</a>
+    <a class="legend-item" href="#sec-licensure"><span class="legend-swatch swatch-licensure"></span>Licensure</a>
+    <a class="legend-item" href="#sec-training"><span class="legend-swatch swatch-training"></span>Board Certification</a>
+    <a class="legend-item" href="#sec-sanctions"><span class="legend-swatch swatch-sanctions"></span>Sanctions &amp; Exclusions</a>
+    <a class="legend-item" href="#sec-attestation"><span class="legend-swatch swatch-attestation"></span>Provider Attestation</a>
   </div>
 </div>
 
@@ -205,7 +210,7 @@
   </div>
 
   <!-- PROVIDER IDENTITY -->
-  <div class="section-header">
+  <div class="section-header" id="sec-identity">
     <div class="section-stripe stripe-identity"></div>
     <div><h2 class="section-title">Provider Identity</h2></div>
   </div>
@@ -218,7 +223,7 @@
   </table>
 
   <!-- LICENSURE -->
-  <div class="section-header">
+  <div class="section-header" id="sec-licensure">
     <div class="section-stripe stripe-licensure"></div>
     <div><h2 class="section-title">Licensure</h2></div>
   </div>
@@ -227,9 +232,9 @@
     <tbody>
       <tr><td class="col-indicator ind-licensure"></td>
         <td class="td-element">State Professional License<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">MD, DO, PA, RN, LPN, NP, CRNA, APN, ABA, LCSW, MFT, CP, PC, DMD, DDS, RDH, PT, OT &amp; allied health</span></td>
-        <td class="td-source">State Professional Licensing Boards &mdash; all 50 states + DC<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See State Licensing Authority Index below</span></td>
+        <td class="td-source">State Professional Licensing Boards &mdash; all 50 states + DC<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See <a class="idx-link" href="#idx-state-licensing">State Licensing Authority Index</a> below</span></td>
         <td class="td-authority">State licensing authorities &mdash; 15 unified portals, 36 specialty-specific boards</td>
-        <td class="td-url">251 state board portals &mdash; see index</td>
+        <td class="td-url">251 state board portals &mdash; <a class="jump-link" href="#idx-state-licensing">see index</a></td>
         <td class="td-access">Automated Download / Scraper / Manual File</td><td class="td-freq">Monthly</td></tr>
       <tr><td class="col-indicator ind-licensure"></td>
         <td class="td-element">DEA Registration</td>
@@ -239,15 +244,94 @@
         <td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
       <tr><td class="col-indicator ind-licensure"></td>
         <td class="td-element">Controlled Dangerous Substances (CDS) License<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">A separate (second) state controlled-substance registration is required in 25 jurisdictions per the DOJ/DEA: Alabama, Connecticut, Delaware, DC, Guam, Hawaii, Idaho, Illinois, Indiana, Iowa, Louisiana, Maryland, Massachusetts, Michigan, Missouri, Nevada, New Jersey, New Mexico, Oklahoma, Puerto Rico, Rhode Island, South Carolina, South Dakota, Utah, Wyoming (<a href="https://www.deadiversion.usdoj.gov/drugreg/reg_apps/pract-state-lic-require.html" target="_blank">DOJ requirements</a>).</span></td>
-        <td class="td-source">State CDS / Pharmacy Boards &mdash; 25 jurisdictions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See CDS State Source Index below</span></td>
+        <td class="td-source">State CDS / Pharmacy Boards &mdash; 25 jurisdictions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See <a class="idx-link" href="#idx-cds">CDS State Source Index</a> below</span></td>
         <td class="td-authority">State CDS / pharmacy licensing authorities</td>
-        <td class="td-url">CDS portals &mdash; see index</td>
+        <td class="td-url">CDS portals &mdash; <a class="jump-link" href="#idx-cds">see index</a></td>
         <td class="td-access">Automated Download / Scraper / Manual File</td><td class="td-freq">Monthly</td></tr>
     </tbody>
   </table>
 
+  <!-- EDUCATION & TRAINING -->
+  <div class="section-header" id="sec-training">
+    <div class="section-stripe stripe-training"></div>
+    <div><h2 class="section-title">Board Certification</h2></div>
+  </div>
+  <table class="source-table">
+    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
+    <tbody>
+      <tr><td class="col-indicator ind-training"></td><td class="td-element">Board Certification (MD / DO)</td><td class="td-source">American Board of Medical Specialties (ABMS)</td><td class="td-authority">American Board of Medical Specialties</td><td class="td-url"><a href="https://www.abms.org/" target="_blank">abms.org</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
+    </tbody>
+  </table>
+
+  <!-- SANCTIONS & EXCLUSIONS -->
+  <div class="section-header" id="sec-sanctions">
+    <div class="section-stripe stripe-sanctions"></div>
+    <div><h2 class="section-title">Sanctions &amp; Exclusions</h2></div>
+  </div>
+  <table class="source-table">
+    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
+    <tbody>
+      <tr><td class="col-indicator ind-sanctions"></td>
+        <td class="td-element">NPDB Adverse Action Reports<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Medical malpractice payments, state licensure limitations &amp; sanctions, Medicare &amp; Medicaid sanctions</span></td>
+        <td class="td-source">National Practitioner Data Bank (NPDB)</td>
+        <td class="td-authority">U.S. Dept. of Health &amp; Human Services / HRSA</td>
+        <td class="td-url"><a href="https://www.npdb.hrsa.gov" target="_blank">npdb.hrsa.gov</a></td>
+        <td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
+      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">Medicare Exclusions &mdash; Federal (OIG LEIE)</td><td class="td-source">OIG List of Excluded Individuals/Entities (LEIE)</td><td class="td-authority">HHS Office of Inspector General</td><td class="td-url"><a href="https://oig.hhs.gov/exclusions/" target="_blank">oig.hhs.gov/exclusions</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
+      <tr><td class="col-indicator ind-sanctions"></td>
+        <td class="td-element">State Medicaid Exclusion Lists<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">42 jurisdictions with direct list URLs; remaining U.S. jurisdictions covered by OIG LEIE nationally. See <a class="idx-link" href="#idx-medicaid">index</a> below.</span></td>
+        <td class="td-source">42 individual state Medicaid exclusion lists &mdash; <a class="idx-link" href="#idx-medicaid">see index</a> below</td>
+        <td class="td-authority">State Medicaid Programs (Departments of Health / Social Services)</td>
+        <td class="td-url">State Medicaid exclusion lists &mdash; <a class="jump-link" href="#idx-medicaid">see index</a></td>
+        <td class="td-access">Automated Download</td><td class="td-freq">Monthly / Quarterly</td></tr>
+      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">SAM Exclusions</td><td class="td-source">SAM.gov Exclusions Database</td><td class="td-authority">General Services Administration (GSA)</td><td class="td-url"><a href="https://sam.gov/reports/awards/standard" target="_blank">sam.gov</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
+      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">OFAC &mdash; Specially Designated Nationals (SDN)</td><td class="td-source">OFAC SDN List</td><td class="td-authority">U.S. Treasury / Office of Foreign Assets Control</td><td class="td-url"><a href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" target="_blank">ofac.treasury.gov</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
+      <tr><td class="col-indicator ind-sanctions"></td>
+        <td class="td-element">State Board Licensure Actions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Revocations, suspensions, probations, voluntary surrenders, and other formal board actions</span></td>
+        <td class="td-source">State Professional Licensing Boards &mdash; all 50 states + DC<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See <a class="idx-link" href="#idx-board-action">Board Licensure Action Source Index</a> below</span></td>
+        <td class="td-authority">Individual state licensing boards</td>
+        <td class="td-url">254 state board portals &mdash; <a class="jump-link" href="#idx-board-action">see index</a></td>
+        <td class="td-access">Scraper / Bulk Download (board-dependent)</td><td class="td-freq">Varies by board (rolling–quarterly)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- MEDICARE PARTICIPATION STATUS -->
+  <div class="section-header">
+    <div class="section-stripe stripe-sanctions"></div>
+    <div><h2 class="section-title">Medicare Participation Status</h2></div>
+  </div>
+  <table class="source-table">
+    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
+    <tbody>
+      <tr><td class="col-indicator ind-sanctions"></td>
+        <td class="td-element">Medicare Opt-Out (MOO)<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Indicates whether a provider has filed an opt-out affidavit and is not participating in Medicare</span></td>
+        <td class="td-source">National Medicare Opt-Out Affidavits Database</td>
+        <td class="td-authority">Centers for Medicare &amp; Medicaid Services (CMS)</td>
+        <td class="td-url"><a href="https://data.cms.gov/tools/provider-opt-out-affidavits-look-up-tool" target="_blank">data.cms.gov</a></td>
+        <td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
+    </tbody>
+  </table>
+
+  <!-- PROVIDER ATTESTATION -->
+  <div class="section-header" id="sec-attestation">
+    <div class="section-stripe stripe-attestation"></div>
+    <div><h2 class="section-title">Provider Attestation</h2></div>
+  </div>
+  <table class="source-table">
+    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
+    <tbody>
+      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Provider Application &amp; Attestation</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
+      <tr><td class="col-indicator ind-attestation"></td>
+        <td class="td-element">Disclosure Questions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Inability to perform; drug use; history of license loss; disciplinary actions</span></td>
+        <td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td>
+        <td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
+      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Hospital Affiliations</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
+      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Malpractice Insurance Coverage</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
+    </tbody>
+  </table>
+
   <!-- STATE LICENSING & BOARD ACTION INDEX -->
-  <div class="section-header mt-section">
+  <div class="section-header mt-section" id="idx-state-licensing">
     <div class="section-stripe stripe-licensure"></div>
     <div>
       <h2 class="section-title" style="font-size:17px;">State Licensing Authority Index</h2>
@@ -497,7 +581,7 @@
   </table>
 
   <!-- CDS SOURCE INDEX -->
-  <div class="section-header mt-section">
+  <div class="section-header mt-section" id="idx-cds">
     <div class="section-stripe stripe-licensure"></div>
     <div>
       <h2 class="section-title" style="font-size:17px;">CDS State Source Index</h2>
@@ -523,76 +607,15 @@
     </tbody>
   </table>
 
-  <!-- EDUCATION & TRAINING -->
-  <div class="section-header">
-    <div class="section-stripe stripe-training"></div>
-    <div><h2 class="section-title">Board Certification</h2></div>
-  </div>
-  <table class="source-table">
-    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
-    <tbody>
-      <tr><td class="col-indicator ind-training"></td><td class="td-element">Board Certification (MD / DO)</td><td class="td-source">American Board of Medical Specialties (ABMS)</td><td class="td-authority">American Board of Medical Specialties</td><td class="td-url"><a href="https://www.abms.org/" target="_blank">abms.org</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
-    </tbody>
-  </table>
-
-  <!-- SANCTIONS & EXCLUSIONS -->
-  <div class="section-header">
-    <div class="section-stripe stripe-sanctions"></div>
-    <div><h2 class="section-title">Sanctions &amp; Exclusions</h2></div>
-  </div>
-  <table class="source-table">
-    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
-    <tbody>
-      <tr><td class="col-indicator ind-sanctions"></td>
-        <td class="td-element">NPDB Adverse Action Reports<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Medical malpractice payments, state licensure limitations &amp; sanctions, Medicare &amp; Medicaid sanctions</span></td>
-        <td class="td-source">National Practitioner Data Bank (NPDB)</td>
-        <td class="td-authority">U.S. Dept. of Health &amp; Human Services / HRSA</td>
-        <td class="td-url"><a href="https://www.npdb.hrsa.gov" target="_blank">npdb.hrsa.gov</a></td>
-        <td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
-      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">Medicare Exclusions &mdash; Federal (OIG LEIE)</td><td class="td-source">OIG List of Excluded Individuals/Entities (LEIE)</td><td class="td-authority">HHS Office of Inspector General</td><td class="td-url"><a href="https://oig.hhs.gov/exclusions/" target="_blank">oig.hhs.gov/exclusions</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
-      <tr><td class="col-indicator ind-sanctions"></td>
-        <td class="td-element">State Medicaid Exclusion Lists<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">42 jurisdictions with direct list URLs; remaining U.S. jurisdictions covered by OIG LEIE nationally. See index below.</span></td>
-        <td class="td-source">42 individual state Medicaid exclusion lists &mdash; see index below</td>
-        <td class="td-authority">State Medicaid Programs (Departments of Health / Social Services)</td>
-        <td class="td-url">State Medicaid exclusion lists &mdash; see index</td>
-        <td class="td-access">Automated Download</td><td class="td-freq">Monthly / Quarterly</td></tr>
-      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">SAM Exclusions</td><td class="td-source">SAM.gov Exclusions Database</td><td class="td-authority">General Services Administration (GSA)</td><td class="td-url"><a href="https://sam.gov/reports/awards/standard" target="_blank">sam.gov</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
-      <tr><td class="col-indicator ind-sanctions"></td><td class="td-element">OFAC &mdash; Specially Designated Nationals (SDN)</td><td class="td-source">OFAC SDN List</td><td class="td-authority">U.S. Treasury / Office of Foreign Assets Control</td><td class="td-url"><a href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" target="_blank">ofac.treasury.gov</a></td><td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
-      <tr><td class="col-indicator ind-sanctions"></td>
-        <td class="td-element">State Board Licensure Actions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Revocations, suspensions, probations, voluntary surrenders, and other formal board actions</span></td>
-        <td class="td-source">State Professional Licensing Boards &mdash; all 50 states + DC<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">See Board Licensure Action Source Index below</span></td>
-        <td class="td-authority">Individual state licensing boards</td>
-        <td class="td-url">254 state board portals &mdash; see index</td>
-        <td class="td-access">Scraper / Bulk Download (board-dependent)</td><td class="td-freq">Varies by board (rolling–quarterly)</td></tr>
-    </tbody>
-  </table>
-
-  <!-- MEDICARE PARTICIPATION STATUS -->
-  <div class="section-header">
-    <div class="section-stripe stripe-sanctions"></div>
-    <div><h2 class="section-title">Medicare Participation Status</h2></div>
-  </div>
-  <table class="source-table">
-    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
-    <tbody>
-      <tr><td class="col-indicator ind-sanctions"></td>
-        <td class="td-element">Medicare Opt-Out (MOO)<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Indicates whether a provider has filed an opt-out affidavit and is not participating in Medicare</span></td>
-        <td class="td-source">National Medicare Opt-Out Affidavits Database</td>
-        <td class="td-authority">Centers for Medicare &amp; Medicaid Services (CMS)</td>
-        <td class="td-url"><a href="https://data.cms.gov/tools/provider-opt-out-affidavits-look-up-tool" target="_blank">data.cms.gov</a></td>
-        <td class="td-access">Automated Download</td><td class="td-freq">Monthly</td></tr>
-    </tbody>
-  </table>
-
   <!-- STATE MEDICAID EXCLUSION INDEX -->
-  <div class="section-header">
+  <div class="section-header" id="idx-medicaid">
     <div class="section-stripe stripe-sanctions"></div>
     <div>
       <h2 class="section-title" style="font-size:17px;">State Medicaid Exclusion Source Index</h2>
       <div class="section-subtitle">42 jurisdictions with direct state Medicaid exclusion list URLs, plus 9 jurisdictions covered by federal OIG LEIE (per SOT).</div>
     </div>
   </div>
-  <table class="index-table" style="margin-bottom:48px;">
+  <table class="index-table">
     <thead><tr><th>St.</th><th>Medicaid Exclusion Source</th><th class="td-divider"></th><th>St.</th><th>Medicaid Exclusion Source</th></tr></thead>
     <tbody>
 <tr><td><span class="idx-state">AK</span></td><td><span class="idx-source"><a href="https://health.alaska.gov/en/office-of-the-commissioner/medicaid-program-integrity/" target="_blank">Alaska Department of Health</a></span></td><td class="td-divider"></td><td><span class="idx-state">AL</span></td><td><span class="idx-source"><a href="https://medicaid.alabama.gov/content/8.0_Fraud/8.7_Suspended_Providers.aspx" target="_blank">Alabama Medicaid Agency</a></span></td></tr>
@@ -622,7 +645,7 @@
   </table>
 
   <!-- BOARD LICENSURE ACTION SOURCE INDEX -->
-  <div class="section-header mt-section">
+  <div class="section-header mt-section" id="idx-board-action">
     <div class="section-stripe stripe-sanctions"></div>
     <div>
       <h2 class="section-title" style="font-size:17px;">Board Licensure Action Source Index</h2>
@@ -770,24 +793,6 @@ WV</span></td><td><span class="idx-source"><a href="https://www.bacb.com/service
 <tr><td><span class="idx-state">NC</span></td><td><span class="idx-source"><a href="https://portal.ncbehavioranalystboard.org/Verification/search.aspx" target="_blank">North Carolina Behavior Analyst Licensure Board</a><span class="idx-sub">Lookup</span></span></td><td class="td-divider"></td><td><span class="idx-state">WY</span></td><td><span class="idx-source"><a href="https://nha.wyo.gov/public/discipline" target="_blank">Wyoming State Board of Nursing</a><span class="idx-sub">Download</span></span></td></tr>
     
     
-    </tbody>
-  </table>
-
-  <!-- PROVIDER ATTESTATION -->
-  <div class="section-header">
-    <div class="section-stripe stripe-attestation"></div>
-    <div><h2 class="section-title">Provider Attestation</h2></div>
-  </div>
-  <table class="source-table" style="margin-bottom:48px;">
-    <thead><tr><th style="width:4px;padding:0;"></th><th>Data Element</th><th>Primary Source</th><th>Custodian / Authority</th><th>Source URL</th><th>Access Method</th><th>Refresh</th></tr></thead>
-    <tbody>
-      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Provider Application &amp; Attestation</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
-      <tr><td class="col-indicator ind-attestation"></td>
-        <td class="td-element">Disclosure Questions<br><span style="font-weight:400;font-size:11px;color:var(--text-muted);">Inability to perform; drug use; history of license loss; disciplinary actions</span></td>
-        <td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td>
-        <td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
-      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Hospital Affiliations</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
-      <tr><td class="col-indicator ind-attestation"></td><td class="td-element">Malpractice Insurance Coverage</td><td class="td-source">CAQH ProView</td><td class="td-authority">Provider Self-Attestation via CAQH</td><td class="td-url"><a href="https://proview.caqh.org/" target="_blank">proview.caqh.org</a></td><td class="td-access">API</td><td class="td-freq">On Demand</td></tr>
     </tbody>
   </table>
 
