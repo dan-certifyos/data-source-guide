@@ -111,6 +111,13 @@ The script classifies each U.S. state and DC: rows whose LINK column points at t
 1. **No internal links in the HTML or PDF.** This is a client-facing document. Do not link to internal Google Sheets, Confluence pages, Jira tickets, or any other internal tooling. Reference data sources by name only.
 2. **Every HTML edit must be followed by PDF regen and GCS publish.** Run `bash scripts/publish.sh` after any change to the HTML. Never commit or share an HTML update without also updating the PDF and GCS.
 
+## Version History
+
+The published reference guide carries a version label in its header (e.g. `CertifyOS · 2026 · v2`). Each published revision is tracked below.
+
+- **v1** — Initial published Primary Source Reference Guide (full source index across Provider Identity, Licensure, Board Certification, Sanctions & Exclusions, and Medicare Participation Status).
+- **v2 (2026-06-16)** — CDS updates: removed the DEA-registrant-file CDS row (state-source CDS row retained); removed internal Google Sheet links from the State Medicaid Exclusions row and unwrapped a `google.com/url` redirect in the State Licensing index; added external CDS source links in the CDS State Source Index (DC, MI, NJ, OK, RI); added the second-license jurisdiction list with the DOJ source link to the CDS source overview row.
+
 ## License
 
 Internal reference material; confirm with CertifyOS before redistributing.
