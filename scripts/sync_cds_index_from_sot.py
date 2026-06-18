@@ -17,6 +17,7 @@ After running, follow the Edit → PDF → Publish steps in README.md (run publi
 from __future__ import annotations
 
 import html as html_module
+import os
 import re
 import sys
 from pathlib import Path
@@ -208,7 +209,23 @@ def patch_html(html_path: Path, tbody_inner: str, state_count: int) -> None:
     html_path.write_text(text, encoding="utf-8")
 
 
+GUARD_MESSAGE = (
+    "REFUSING TO RUN: the CDS State Source Index is now manually curated to the "
+    "25 DOJ second-license jurisdictions, and several per-state source links are "
+    "not present in 'CDS Research.xlsx'. Re-running this sync would overwrite that "
+    "work.\n\n"
+    "If you really intend to rebuild the CDS index from the xlsx (and have confirmed "
+    "the xlsx reflects the curated 25-state list), re-run with --force or set "
+    "SOT_SYNC_FORCE=1.\n"
+)
+
+
 def main() -> None:
+    forced = "--force" in sys.argv[1:] or os.environ.get("SOT_SYNC_FORCE") == "1"
+    if not forced:
+        print(GUARD_MESSAGE, file=sys.stderr)
+        sys.exit(2)
+
     xlsx = DEFAULT_XLSX
     if not xlsx.is_file():
         print(
