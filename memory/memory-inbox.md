@@ -11,3 +11,4 @@ Types: `STATE` | `RULE` | `PATTERN` | `SKILL` | `FEEDBACK` | `DECISION`
 - [2026-06-18] RULE: gen_pdf.js output is non-deterministic (byte diffs each run); after scripts/publish.sh, commit the regenerated PDF so git matches the GCS artifact.
 - [2026-06-18] STATE: Project skills live at .cursor/skills/<name>/SKILL.md and are not gitignored in this repo (verified via git check-ignore).
 - [2026-06-18] SKILL: Added publish-data-source-guide skill (prefers `bash scripts/publish.sh`) for the Edit→PDF→Publish workflow.
+- [2026-06-18] STATE: data-source-guide is a single primary git worktree (no linked worktrees); "clean up worktree" requests have nothing to prune. `gh pr merge --delete-branch` removes remote+local branch and switches to main; follow with `git fetch --prune` to clear stale tracking refs.
