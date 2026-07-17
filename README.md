@@ -1,5 +1,7 @@
 # data-source-guide
 
+> **DEPRECATED:** This repository is no longer maintained. It has been superseded by [monitoring-reporting-hub](https://github.com/dan-certifyos/monitoring-reporting-hub), which now serves the CertifyOS data quality / primary source reporting functionality. Please use that repo going forward.
+
 Published **CertifyOS primary source reference** (HTML/PDF) and pointers to **data source of truth** spreadsheets.
 
 ## Contents
